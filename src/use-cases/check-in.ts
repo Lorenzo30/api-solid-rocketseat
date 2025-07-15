@@ -30,14 +30,12 @@ export class CheckInUseCase {
 
 
         const gym = await this.gymsRepository.findById(gymId)
-        console.log(latitude,longitude,userId,gymId,"usuariooooo")
+
         const distance = getDistanceBetweenCoordinates({latitude:latitude,longitude:longitude},{latitude:gym?.latitude.toNumber(),longitude:gym?.longitude.toNumber()})
 
         if (!gym) {
             throw new ResourceNotFoundError();
         }
-
-        console.log(distance,"distance")
 
         const MAX_DISTANCE = 0.1;
 
