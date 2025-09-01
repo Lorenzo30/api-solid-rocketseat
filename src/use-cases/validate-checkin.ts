@@ -31,8 +31,7 @@ export class ValidateCheckInUseCase {
       }
 
       checkIn.validated_at = new Date();
-
-
+      
         return {
             checkIn
         }

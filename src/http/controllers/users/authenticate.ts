@@ -16,8 +16,21 @@ export async function authenticate (request:FastifyRequest,reply:FastifyReply) {
     const {email,password} = registerBodySchema.parse(request.body);
 
     try {
+        console.log("oiiiiiiii")
         const registerUser = makeAuthenticateUseCase();
-        await registerUser.execute({email,password});
+        const {user} = await registerUser.execute({email,password});
+
+        console.log(user,"userrr")
+
+        const token = await reply.jwtSign({},{
+            sign:{
+                sub:user.id
+            }
+        })
+
+        return reply.status(200).send({
+            token
+        });
     } catch (e) {
         if (e instanceof InvalidCredentialsError) {
             return reply.status(400).send({message:e.message})
@@ -27,5 +40,5 @@ export async function authenticate (request:FastifyRequest,reply:FastifyReply) {
        
     }
 
-    return reply.status(200).send();
+    
 }

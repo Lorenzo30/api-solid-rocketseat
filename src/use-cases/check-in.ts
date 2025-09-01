@@ -1,8 +1,6 @@
 import { CheckInsRepository } from "@/repositories/check-ins-repository";
 import { GymRepository } from "@/repositories/gyms-repository";
-import { UsersRepository } from "@/repositories/users-repository";
 import { CheckIn } from "@prisma/client";
-import { date } from "zod";
 import { ResourceNotFoundError } from "./error/resource-not-found-error";
 import { getDistanceBetweenCoordinates } from "@/utils/get-distance-between-cordinates";
 import { MaxNumberOfCheckInsError } from "./error/max-number-of-check-in-error";
