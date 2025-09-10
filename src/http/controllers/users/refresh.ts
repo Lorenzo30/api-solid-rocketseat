@@ -7,35 +7,30 @@ import { AuthenticateUseCase } from "@/use-cases/authenticate";
 import { InvalidCredentialsError } from "@/use-cases/error/invalid-credentials-error";
 import { makeAuthenticateUseCase } from "@/use-cases/factories/make-authenticate-use-case";
 
-export async function authenticate (request:FastifyRequest,reply:FastifyReply) {
-    const registerBodySchema = z.object({
-        email:z.string().email(),
-        password:z.string().min(6)
-    })
-
-    const {email,password} = registerBodySchema.parse(request.body);
-
+export async function refresh (request:FastifyRequest,reply:FastifyReply) {
+      
+    await request.jwtVerify({onlyCookie:true})
+     
     try {
         
-        const registerUser = makeAuthenticateUseCase();
-        const {user} = await registerUser.execute({email,password});
 
-        const token = await reply.jwtSign(
-            {
-                role:user.role
-            },{
+        const {role} = request.user
+
+        const token = await reply.jwtSign({
+            role
+        },{
             sign:{
-                sub:user.id,
+                sub:request.user.sub,
                 expiresIn:"10m"
             }
         })
 
         const refreshToken = await reply.jwtSign(
             {
-                refreshToken:user.role
-            },{
+                role
+        },{
             sign:{
-                sub:user.id,
+                sub:request.user.sub,
                 expiresIn:"7d"
             }
         })
